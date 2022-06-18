@@ -50,8 +50,16 @@ public class Main {
     stringList.forEach(x-> System.out.print(x + " "));
     System.out.println("\n"); 
 
-//перебираем при помощи оператора «for-each» все содержимое списка в обратном порядке:       
-System.out.println("Перебираем список stringList в обратном порядке с помощью оператора for-each и метода forEach()");    
+/*Перебираем при помощи оператора «for-each» все содержимое списка в обратном порядке:
+Направление итерации задается методом setDirection(). При этом какие-либо изменения
+в самой коллекции(в данном случае - списке) не происходит и порядок элементов в ней не меняется.
+Указанный метод подменяет лишь итератор, который находится под капотом у for-each и forEach(). 
+При этом, по умолчанию, назначен итератор для прямого направления и к коллекциям, к которым
+метод setDirection() не применялся, действует именно он. Для возврата к нормальному порядку
+итерации, необходимо вновь применить к коллекции метод setDirection(), передав в него в качестве
+параметра константу FORVARD_DIRECTION.    
+*/       
+    System.out.println("Перебираем список stringList в обратном порядке с помощью оператора for-each и метода forEach()");    
 
     stringList.setDirection(REVERSE_DIRECTION); 
 
@@ -61,23 +69,105 @@ System.out.println("Перебираем список stringList в обратн
 // или тоже самое при помощи метода forEach 
     System.out.println();
     stringList.forEach(x-> System.out.print(x + " "));
+    System.out.println("\n"); 
+
+/* Перебираем при помощи оператора «for-each» содержимое списка intList от головного узла до узла 
+ с заданным значением; если список заданного значения не содержит, то должно быть перебрано всё содержимое списка.
+*/  
+    System.out.println("Перебираем список intListList от головного узла до узла с значением 300\n"
+                       + "с помощью оператора for-each и метода forEach()");    
+    for(int i : intList){
+        System.out.print(i + " ");
+        if(i == 300)
+           break;
+        }
+    System.out.println();
+/*    
+ Либо, используем перегруженный стандартный метод forEach, в который добавлен параметр T toElement до совпадения с которым
+будет происходить перебор списка.   
+*/    
+    intList.forEach(300, x -> System.out.print(x + " "));
+    System.out.println("\n");
+            
+/* Перебираем при помощи оператора «for-each» содержимое списка intList от узла с заданным значением 
+ до конца списка. Если список заданного значения не содержит, то ничего происходить не должно. 
+*/  
+    System.out.println("Перебираем список intListList от узла с заданным значением 300 до хвоста списка\n"
+                       + "с помощью оператора for-each и метода forEach()");    
+        boolean a = false;
+        for(int s : intList){
+            if((s == 300) == a)  
+                continue;
+            a = true;
+            System.out.print(s + " ");
+        }
+    System.out.println();       
+/*    
+ Либо, используем перегруженный стандартный метод forEach, в который добавлен параметр T fromElement, после 
+совпадения с которым будет происходить заданное действие (список перебирается весь, но заданное действие 
+происходит после совпадения элемента с параметром fromElement.     
+*/ 
+    intList.forEach(x -> System.out.print(x + " "), 300);    
+    System.out.println("\n");       
+
+/* Перебираем при помощи оператора «for-each» содержимое списка timeList от хвостового узла до узла 
+ с заданным значением 11:45. Если список заданного значения не содержит, то должно быть перебрано всё содержимое списка.
+ Если используется For-Each Loop, то перед ним следует изменить направление итерации в коллекции на обратное. 
+ методом setDirection. В этом случае, кроме For-Each Loop, сработает и использованный выше метод 
+ forEach(Consumer<? super T> action, T fromElement). Если направление итерации не менять, решить задачу
+ перебора от хвоста до заданного значения сможет решить перегруженный метод forEach, в который, кроме  
+ параметра T fromElement, добавлен параметр, задающий направление итерации. См.ниже.   
+*/  
+    System.out.println("Перебираем список timeList от хвостового узла до узла с значением 11:45\n"
+                       + "с помощью оператора for-each и метода forEach()");    
+    
+    timeList.setDirection(REVERSE_DIRECTION); 
+    
+    for(LocalTime i : timeList){
+        System.out.print(i + " ");
+        if(i.equals(LocalTime.of(11, 45)))
+           break;
+        }
+
+    System.out.println();
+
+//возвращаем timeList к нормальному порядку итерации и используем forEach с тремя параметрами...    
+    
+    timeList.setDirection(FORVARD_DIRECTION);  
+    
+    timeList.forEach(LocalTime.of(11, 45), x -> System.out.print(x + " "), REVERSE_DIRECTION);
+    System.out.println("\n"); 
+    
+/* Перебираем при помощи оператора «for-each» содержимое списка timeList от узла с заданным значением 11:45 
+ до головного узла. Если список заданного значения не содержит, то ничего не происходит.
+ Если используется For-Each Loop, то перед ним следует изменить направление итерации в коллекции на обратное. 
+ методом setDirection. В этом случае, кроме For-Each Loop, сработает и использованный выше метод 
+ forEach(Consumer<? super T> action, T fromElement). Если направление итерации не менять, решить задачу
+ перебора от хвоста до заданного значения сможет решить перегруженный метод forEach, в который, кроме  
+ параметра T fromElement, добавлен параметр, задающий направление итерации. См.ниже.   
+*/  
+    System.out.println("Перебираем список timeList от узла с значением 11:45 до головного узла\n"
+                       + "с помощью оператора for-each и метода forEach()");    
+    
+    timeList.setDirection(REVERSE_DIRECTION); 
+    
+    a = false;
+    for(LocalTime s : timeList){
+        if(s.equals(LocalTime.of(11, 45)) == a)  
+            continue;
+        a = true;
+        System.out.print(s + " ");
+        }
     System.out.println(); 
+
+//возвращаем timeList к нормальному порядку итерации и используем forEach с тремя параметрами...    
     
+    timeList.setDirection(FORVARD_DIRECTION);  
     
+    timeList.forEach(x -> System.out.print(x + " "), LocalTime.of(11, 45), REVERSE_DIRECTION);
+    System.out.println("\n"); 
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-/* Список доступных методов:
+/* Список доступных методов, доставшихся в наследство от 110 курса:
         - Метод addFirst(String data) добавляет значения в начало списка;
         - Метод addFromArrayFirst(String[] data) добавляет все значения заданного массива в начало списка с сохранением порядка;
         - Метод extractFirst() извлекает и возвращает значение из начала списка без его удаления из списка;
