@@ -5,6 +5,8 @@ package Dev_J_120;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.function.Consumer;
 
 public class DoublyList <T> implements Iterable<T>{
 
@@ -299,7 +301,73 @@ public class DoublyList <T> implements Iterable<T>{
     public void mergeCollectionToEnd(Collection<T> collection) {
         T[] temp = (T[])collection.toArray(new Object[0]);
         addFromArrayEnd(temp);  
-    }     
+    }
+    
+    /*  перегруженный стандартный метод forEach, в который добавлен параметр T toElement
+    до совпадения с которым будет происходить перебор списка. 
+    */
+    public void forEach(T toElement, Consumer<? super T> action) {
+        Objects.requireNonNull(action);
+        for (T t : this) {
+            action.accept(t);
+            if(t.equals(toElement))
+                break;
+        }
+    }
+    
+    /* перегруженный стандартный метод forEach, в который добавлен параметр T fromElement 
+    после совпадения с которым будет происходить заданное действие (список перебирается весь, 
+    но заданное действие происходит после совпадения элемента с параметром fromElement.  
+    */     
+     public void forEach(Consumer<? super T> action, T fromElement) {
+        Objects.requireNonNull(action);
+        this.setDirection(direction);
+        boolean a = false;
+        for(T t : this){
+            if(t.equals(fromElement) == a) 
+                continue;
+            a = true;
+            action.accept(t);
+        }
+    }
+     
+    /*  перегруженный стандартный метод forEach, в который добавлен параметр T toElement
+    до совпадения с которым будет происходить перебор списка. В метод добавлен третий 
+    параметр, задающий направление итерации. В метод добавлен третий параметр, задающий 
+    направление итерации. Независимо от выбранного направления итерации, после завершения 
+    работы метода, порядок итерации для списка устанавливается по умолчанию, т.е. прямой.
+    */
+    public void forEach(T toElement, Consumer<? super T> action, boolean direction) {
+        Objects.requireNonNull(action);
+        this.setDirection(direction);
+        for (T t : this) {
+            action.accept(t);
+            if(t.equals(toElement))
+                break;
+        }
+        this.setDirection(true);
+    } 
+     
+    /* перегруженный стандартный метод forEach, в который добавлен параметр T fromElement 
+    после совпадения с которым будет происходить заданное действие (список перебирается весь, 
+    но заданное действие происходит после совпадения элемента с параметром fromElement. В
+    метод добавлен третий параметр, задающий направление итерации. Независимо от выбранного
+    направления итерации, после завершения работы метода, порядок итерации для списка 
+    устанавливается по умолчанию, т.е. прямой. 
+    */  
+    public void forEach(Consumer<? super T> action, T fromElement, boolean direction) {
+        Objects.requireNonNull(action);
+        this.setDirection(direction);
+        boolean a = false;
+        for(T t : this){
+            if(t.equals(fromElement) == a) 
+                continue;
+            a = true;
+            action.accept(t);
+        }
+        this.setDirection(true);
+    }  
+   
 //переопределенный метод iterator(). Возвращает один из двух типов итераторов.
     @Override
     public Iterator<T> iterator() {
@@ -339,7 +407,6 @@ public class DoublyList <T> implements Iterable<T>{
         public boolean hasNext() {
             return prevNode != null;
         }
-
             @Override
         public T next() {
             if(prevNode == null) 
@@ -348,9 +415,8 @@ public class DoublyList <T> implements Iterable<T>{
             prevNode = prevNode.prev;
             return res;
         }    
-    }
+    }    
     
-    }
     // вложенный класс Node  в сущностях которого хранятся данные и ссылка на следующий узел.
     class Node <T> {
 
@@ -362,5 +428,4 @@ public class DoublyList <T> implements Iterable<T>{
             System.out.print(data + "; ");
         }
     }
-
-    
+}   
